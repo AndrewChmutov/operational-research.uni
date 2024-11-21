@@ -27,6 +27,7 @@ class SolverStats:
     objective: int
     iterations: int
     avg_chain_len: float
+    n: int
 
 
 @dataclass
@@ -43,10 +44,6 @@ class Solver:
         self.base = kwargs["base"]
         self.stats = SolverStats(**kwargs["stats"])
         self.n = kwargs["n"]
-
-
-class Solvers:
-    solvers: list[Solver]
 
 
 # Load models
