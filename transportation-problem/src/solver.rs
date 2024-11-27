@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use crate::problem::Problem;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 struct GridCell {
@@ -58,18 +58,33 @@ impl TransportationSolver {
             // Update
             supply[i] -= available;
             demand[j] -= available;
-            self.grid[i][j] = GridCell {val: available, base: true};
+            self.grid[i][j] = GridCell {
+                val: available,
+                base: true,
+            };
             self.base.push((i, j));
 
             // On bounds
-            if i + 1 == self.n && j + 1 == self.n { break; }
-            if i + 1 == self.n { j += 1; continue; }
-            if j + 1 == self.n { i += 1; continue; }
+            if i + 1 == self.n && j + 1 == self.n {
+                break;
+            }
+            if i + 1 == self.n {
+                j += 1;
+                continue;
+            }
+            if j + 1 == self.n {
+                i += 1;
+                continue;
+            }
 
             // Step
-            if supply[i] == 0 { i += 1 }
-            else if demand[j] == 0 { j += 1 }
-            else { panic!("Either supply or demand value should be exhausted") }
+            if supply[i] == 0 {
+                i += 1
+            } else if demand[j] == 0 {
+                j += 1
+            } else {
+                panic!("Either supply or demand value should be exhausted")
+            }
         }
 
         debug_assert_eq!(supply.iter().sum::<i32>(), 0);
@@ -125,6 +140,7 @@ impl TransportationSolver {
     }
 
     fn fill_non_basic(&mut self, u: &[i32], v: &[i32]) {
+        #[allow(clippy::needless_range_loop)]
         for i in 0..(u.len()) {
             for j in 0..(v.len()) {
                 if !self.grid[i][j].base {
@@ -156,25 +172,34 @@ impl TransportationSolver {
         if visited[i][j] {
             return match initial == (i, j) {
                 true => Some(vec![]),
-                false => None
-            }
+                false => None,
+            };
         }
         visited[i][j] = true;
 
         // Can't aggregate row and column since they have different opaque types due to
         // generics. It could've been boxed, but it would affect efficiency.
         if move_in_column {
-            for (next_i, next_j) in self.col(i, j).filter(|x| *x != (i, j) && (*x == initial || self.grid[x.0][x.1].base)) {
-                if let Some(mut next) = self.find_chain_rec(visited, initial, next_i, next_j, !move_in_column) {
+            for (next_i, next_j) in self
+                .col(i, j)
+                .filter(|x| *x != (i, j) && (*x == initial || self.grid[x.0][x.1].base))
+            {
+                if let Some(mut next) =
+                    self.find_chain_rec(visited, initial, next_i, next_j, !move_in_column)
+                {
                     next.push((i, j));
                     return Some(next);
                 }
             }
             None
-        }
-        else {
-            for (next_i, next_j) in self.row(i, j).filter(|x| *x != (i, j) && (*x == initial || self.grid[x.0][x.1].base)) {
-                if let Some(mut next) = self.find_chain_rec(visited, initial, next_i, next_j, !move_in_column) {
+        } else {
+            for (next_i, next_j) in self
+                .row(i, j)
+                .filter(|x| *x != (i, j) && (*x == initial || self.grid[x.0][x.1].base))
+            {
+                if let Some(mut next) =
+                    self.find_chain_rec(visited, initial, next_i, next_j, !move_in_column)
+                {
                     next.push((i, j));
                     return Some(next);
                 }
@@ -183,7 +208,7 @@ impl TransportationSolver {
         }
     }
 
-    fn find_chain(&self) -> Vec<(usize, usize)>{
+    fn find_chain(&self) -> Vec<(usize, usize)> {
         // Find minimum coefficient
         let mut min_index = (0, 0);
         let mut min_value = self.grid[0][0].val;
@@ -199,7 +224,8 @@ impl TransportationSolver {
         let mut visited = vec![vec![false; self.n]; self.n];
         // It doesn't matter which direction to pick, since we always
         // arrive to the initial node
-        let mut chain = self.find_chain_rec(&mut visited, min_index, min_index.0, min_index.1, true)
+        let mut chain = self
+            .find_chain_rec(&mut visited, min_index, min_index.0, min_index.1, true)
             .unwrap_or_else(|| panic!("Chain should always exist {visited:?}"));
         chain.reverse();
         chain
@@ -211,12 +237,10 @@ impl TransportationSolver {
         debug_assert!(!self.grid[i][j].base);
 
         // All other variables are basic
-        debug_assert!(
-            chain
+        debug_assert!(chain
             .iter()
             .map(|(i, j)| self.grid[*i][*j].base)
-            .fold(true, |acc, x| acc & x)
-        );
+            .fold(true, |acc, x| acc & x));
 
         // Find the variable that is leaving the base
         let mut min_index = 1;
@@ -248,12 +272,16 @@ impl TransportationSolver {
 
         // Remove from the base
         let (i, j) = chain[min_index];
-        let base_pos = self.base.iter().position(|x| *x == chain[min_index]).expect("Inconsistency in bases");
+        let base_pos = self
+            .base
+            .iter()
+            .position(|x| *x == chain[min_index])
+            .expect("Inconsistency in bases");
         self.base[base_pos] = (chain[0].0, chain[0].1);
         self.grid[i][j].base = false;
     }
 
-    fn objective(&self) -> i32 { 
+    fn objective(&self) -> i32 {
         self.grid
             .iter()
             .flatten()
@@ -274,7 +302,9 @@ impl TransportationSolver {
             let (u, v) = self.derive_steps();
             self.fill_non_basic(&u, &v);
 
-            if self.is_optimal() { break }
+            if self.is_optimal() {
+                break;
+            }
 
             let chain = self.find_chain();
             chain_lengths += chain.len();
@@ -284,8 +314,8 @@ impl TransportationSolver {
         self.stats = Some(SolverStats {
             iterations,
             objective: self.objective(),
-            avg_chain_len: chain_lengths as f32 / iterations as f32, 
-            n: self.n
+            avg_chain_len: chain_lengths as f32 / iterations as f32,
+            n: self.n,
         });
     }
 }

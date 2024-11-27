@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from pulp import PULP_CBC_CMD, LpConstraint, LpConstraintEQ, LpProblem, LpVariable, lpSum
 
-EPSILON = 10**(-6)
+EPSILON = 10 ** (-6)
 M = 5 * 10**6
 
 
@@ -59,21 +59,12 @@ except Exception:
 model = LpProblem(name="Transportation_problem")
 n = len(solver.problem.supply)
 
-variables = [
-    [
-        LpVariable(f"X_{i}_{j}", lowBound=0)
-        for j in range(n)
-    ]
-    for i in range(n)
-]
+variables = [[LpVariable(f"X_{i}_{j}", lowBound=0) for j in range(n)] for i in range(n)]
 
 # Supply constraints
 for i in range(n):
     model += LpConstraint(
-        e=lpSum([
-            variables[i][j]
-            for j in range(n)
-        ]),
+        e=lpSum([variables[i][j] for j in range(n)]),
         sense=0,
         name=f"Supply_constraint {i}",
         rhs=solver.problem.supply[i],
@@ -82,10 +73,7 @@ for i in range(n):
 # Demand constraints
 for j in range(n):
     model += LpConstraint(
-        e=lpSum([
-            variables[i][j]
-            for i in range(n)
-        ]),
+        e=lpSum([variables[i][j] for i in range(n)]),
         sense=LpConstraintEQ,
         name=f"Demand_constraint_{j} ",
         rhs=solver.problem.demand[j],
@@ -93,8 +81,7 @@ for j in range(n):
 
 # Objective
 model += lpSum([
-    variables[i][j] * solver.problem.costs[i][j]
-    for i in range(n) for j in range(n)
+    variables[i][j] * solver.problem.costs[i][j] for i in range(n) for j in range(n)
 ])
 
 # Solve

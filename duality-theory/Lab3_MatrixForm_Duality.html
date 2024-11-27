@@ -5734,9 +5734,9 @@ body.lm-mod-override-cursor .jp-OutputArea-output.jp-mod-isolated::before {
 |----------------------------------------------------------------------------*/
 
 /*
-Hiding collapsers in print mode.
+Hiding collapses in print mode.
 
-Note: input and output wrappers have "display: block" propery in print mode.
+Note: input and output wrappers have "display: block" properly in print mode.
 */
 
 @media print {
@@ -5935,7 +5935,7 @@ Note: input and output wrappers have "display: block" propery in print mode.
   padding: 0;
   margin: 0;
 
-  /* Added to reveal the box-shadow on the input and output collapsers. */
+  /* Added to reveal the box-shadow on the input and output collapses. */
   overflow: visible;
 }
 
@@ -7234,7 +7234,7 @@ all of MD as it is not optimized for dense, information rich UIs.
 }
 </style>
 <style type="text/css">
-/* Force rendering true colors when outputing to pdf */
+/* Force rendering true colors when outputting to pdf */
 * {
   -webkit-print-color-adjust: exact;
 }
@@ -8072,7 +8072,7 @@ Col. 19-21: The values for surplus variables (dual solution)<br/><br/></p>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">PRIMAL_DUAL_SOLUTIONS</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">tollerance</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">tolerance</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">primal</span> <span class="ow">in</span> <span class="n">solutions</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
     <span class="n">dual_base</span> <span class="o">=</span> <span class="p">(</span>
@@ -8080,7 +8080,7 @@ Col. 19-21: The values for surplus variables (dual solution)<br/><br/></p>
     <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
     <span class="n">dual</span> <span class="o">=</span> <span class="n">getFinalTableau</span><span class="p">(</span><span class="n">dual_base</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">primal</span><span class="p">[</span><span class="s2">"obj"</span><span class="p">]</span> <span class="o">-</span> <span class="n">dual</span><span class="p">[</span><span class="s2">"obj"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tollerance</span>  <span class="c1"># Z == W</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">primal</span><span class="p">[</span><span class="s2">"obj"</span><span class="p">]</span> <span class="o">-</span> <span class="n">dual</span><span class="p">[</span><span class="s2">"obj"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span>  <span class="c1"># Z == W</span>
 
     <span class="n">primal_feasible</span> <span class="o">=</span> <span class="s2">"Y"</span> <span class="k">if</span> <span class="p">(</span><span class="n">primal</span><span class="p">[</span><span class="s2">"rs"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"N"</span>
     <span class="n">dual_feasible</span> <span class="o">=</span> <span class="s2">"Y"</span> <span class="k">if</span> <span class="p">(</span><span class="n">dual</span><span class="p">[</span><span class="s2">"rs"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"N"</span>
@@ -8143,9 +8143,9 @@ Col. 19-21: The values for surplus variables (dual solution)<br/><br/></p>
         <span class="s2">"y2"</span><span class="p">,</span>
         <span class="s2">"y3"</span><span class="p">,</span>
         <span class="s2">"y4"</span><span class="p">,</span>
-        <span class="s2">"sur1"</span><span class="p">,</span>
-        <span class="s2">"sur2"</span><span class="p">,</span>
-        <span class="s2">"sur3"</span><span class="p">,</span>
+        <span class="s2">"sure1"</span><span class="p">,</span>
+        <span class="s2">"sure2"</span><span class="p">,</span>
+        <span class="s2">"sure3"</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">)</span>
 
@@ -8195,9 +8195,9 @@ Col. 19-21: The values for surplus variables (dual solution)<br/><br/></p>
 <th class="col_heading level0 col15" id="T_a8ea1_level0_col15">y2</th>
 <th class="col_heading level0 col16" id="T_a8ea1_level0_col16">y3</th>
 <th class="col_heading level0 col17" id="T_a8ea1_level0_col17">y4</th>
-<th class="col_heading level0 col18" id="T_a8ea1_level0_col18">sur1</th>
-<th class="col_heading level0 col19" id="T_a8ea1_level0_col19">sur2</th>
-<th class="col_heading level0 col20" id="T_a8ea1_level0_col20">sur3</th>
+<th class="col_heading level0 col18" id="T_a8ea1_level0_col18">sure1</th>
+<th class="col_heading level0 col19" id="T_a8ea1_level0_col19">sure2</th>
+<th class="col_heading level0 col20" id="T_a8ea1_level0_col20">sure3</th>
 </tr>
 </thead>
 <tbody>

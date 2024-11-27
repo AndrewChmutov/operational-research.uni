@@ -7,7 +7,7 @@ import seaborn
 
 seaborn.set_theme()
 
-EPSILON = 10**(-6)
+EPSILON = 10 ** (-6)
 
 
 @dataclass
@@ -19,7 +19,9 @@ class SolverStats:
 
 
 try:
-    stats: list[list[SolverStats]] = [[SolverStats(**s) for s in bunch] for bunch in json.load(sys.stdin)]
+    stats: list[list[SolverStats]] = [
+        [SolverStats(**s) for s in bunch] for bunch in json.load(sys.stdin)
+    ]
 except Exception:
     print("Couldn't parse the json")
     sys.exit(1)

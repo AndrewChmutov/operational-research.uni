@@ -1,6 +1,6 @@
-use rand::prelude::*;
 use rand::distributions::Uniform;
-use serde::{Serialize, Deserialize};
+use rand::prelude::*;
+use serde::{Deserialize, Serialize};
 
 pub const M: i32 = 5_000_000;
 
@@ -67,6 +67,8 @@ impl GenConfig {
         let mut costs = vec![vec![0; n]; n];
         let rows = n - (rng.gen_range(0.0..self.zero_col_row_max_fraction) * (n as f32)) as usize;
         let cols = n - (rng.gen_range(0.0..self.zero_col_row_max_fraction) * (n as f32)) as usize;
+
+        #[allow(clippy::needless_range_loop)]
         for i in 0..rows {
             for j in 0..cols {
                 costs[i][j] = rng.gen_range(1..=self.max_value);
@@ -74,7 +76,10 @@ impl GenConfig {
         }
 
         let zero_val_int = 0.0..self.zero_val_probability;
-        let m_val_int = self.zero_val_probability..(self.zero_val_probability + self.m_val_probability);
+        let m_val_int =
+            self.zero_val_probability..(self.zero_val_probability + self.m_val_probability);
+
+        #[allow(clippy::needless_range_loop)]
         for i in 0..n {
             for j in 0..n {
                 let roll = rng.gen();
@@ -87,10 +92,24 @@ impl GenConfig {
         }
 
         // Verify
-        debug_assert_eq!(supply.iter().sum::<i32>(), demand.iter().sum::<i32>(), "Not feasible");
-        debug_assert!(supply.iter().fold(true, |acc, x| acc & (x >= &0)), "Non-negativity constrant is violated for supply");
-        debug_assert!(demand.iter().fold(true, |acc, x| acc & (x >= &0)), "Non-negativity constrant is violated for demand");
+        debug_assert_eq!(
+            supply.iter().sum::<i32>(),
+            demand.iter().sum::<i32>(),
+            "Not feasible"
+        );
+        debug_assert!(
+            supply.iter().fold(true, |acc, x| acc & (x >= &0)),
+            "Non-negativity constraint is violated for supply"
+        );
+        debug_assert!(
+            demand.iter().fold(true, |acc, x| acc & (x >= &0)),
+            "Non-negativity constraint is violated for demand"
+        );
 
-        Problem { costs, supply, demand }
+        Problem {
+            costs,
+            supply,
+            demand,
+        }
     }
 }
